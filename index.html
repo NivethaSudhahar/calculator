@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infix Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .calculator {
+            width: 400px;
+            background-color: #b2b2b2; /* Ash color */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculator-screen {
+            width: 100%;
+            height: 80px;
+            border: none;
+            background-color: #252525;
+            color: white;
+            font-size: 36px;
+            text-align: right;
+            padding-right: 20px;
+            padding-left: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .calculator-keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 60px;
+            border-radius: 8px;
+            border: none;
+            font-size: 24px;
+            color: white;
+            background-color: #6e6e6e; /* Grey color for buttons */
+            cursor: pointer;
+        }
+
+        button.operator {
+            background-color: #8e8e8e; /* Slightly darker grey for operators */
+        }
+
+        button.equal-sign {
+            background-color: #a0a0a0; /* Slightly lighter grey for the equal sign */
+            grid-column: span 2;
+        }
+
+        button.all-clear {
+            background-color: #8e8e8e; /* Slightly darker grey for clear button */
+        }
+
+        button:active {
+            background-color: #555; /* Darker grey on button press */
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" class="calculator-screen" value="" disabled />
+        <div class="calculator-keys">
+            <button type="button" class="operator" value="+">+</button>
+            <button type="button" class="operator" value="-">-</button>
+            <button type="button" class="operator" value="*">&times;</button>
+            <button type="button" class="operator" value="/">&divide;</button>
+
+            <button type="button" value="7">7</button>
+            <button type="button" value="8">8</button>
+            <button type="button" value="9">9</button>
+
+            <button type="button" value="4">4</button>
+            <button type="button" value="5">5</button>
+            <button type="button" value="6">6</button>
+
+            <button type="button" value="1">1</button>
+            <button type="button" value="2">2</button>
+            <button type="button" value="3">3</button>
+
+            <button type="button" value="0">0</button>
+            <button type="button" class="decimal" value=".">.</button>
+            <button type="button" class="all-clear" value="all-clear">AC</button>
+
+            <button type="button" class="equal-sign" value="=">=</button>
+        </div>
+    </div>
+
+    <script>
+        const calculatorScreen = document.querySelector('.calculator-screen');
+        let currentInput = '';
+
+        function updateDisplay(value) {
+            calculatorScreen.value = value;
+        }
+
+        function appendToInput(value) {
+            currentInput += value;
+            updateDisplay(currentInput);
+        }
+
+        function evaluateExpression() {
+            try {
+                const result = eval(currentInput);
+                currentInput = result.toString();
+                updateDisplay(currentInput);
+            } catch (error) {
+                updateDisplay('Error');
+                currentInput = '';
+            }
+        }
+
+        function clearCalculator() {
+            currentInput = '';
+            updateDisplay('0');
+        }
+
+        document.querySelector('.calculator-keys').addEventListener('click', event => {
+            const { target } = event;
+            if (!target.matches('button')) return;
+
+            if (target.classList.contains('operator') || target.value.match(/[0-9.]/)) {
+                appendToInput(target.value);
+            } else if (target.classList.contains('equal-sign')) {
+                evaluateExpression();
+            } else if (target.classList.contains('all-clear')) {
+                clearCalculator();
+            }
+        });
+
+        clearCalculator();
+    </script>
+</body>
+</html>
